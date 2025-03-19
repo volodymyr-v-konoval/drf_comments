@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "blog.apps.BlogConfig",
     "rest_framework",
     "rest_framework.authtoken",
+    "captcha",
 ]
 
 MIDDLEWARE = [
@@ -190,3 +191,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+CAPTCHA_TEST_MODE = os.getenv('CAPTCHA_TEST_MODE', 'False') == 'True'

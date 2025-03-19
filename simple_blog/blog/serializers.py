@@ -1,18 +1,37 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Comment
+from captcha.serializers import CaptchaModelSerializer
 
-
-class CommentSerializer(serializers.ModelSerializer):
+class CommentSerializer(CaptchaModelSerializer):
     username = serializers.HiddenField(default=serializers.CurrentUserDefault())
     email = serializers.SerializerMethodField()
-
-    author = serializers.SerializerMethodField()  
+    author = serializers.SerializerMethodField()
+    sender = serializers.EmailField(write_only=True, required=False)  
 
     class Meta:
         model = Comment
-        fields = ('__all__')
+        fields = (
+            "id",
+            "author",
+            "username",
+            "email",
+            "text",
+            "homepage",
+            "created",
+            "updated",
+            "parent",
+            "captcha_code",
+            "captcha_hashkey",
+            "sender",
+        )
+    
+    def create(self, validated_data):
+        validated_data.pop("captcha_code", None)
+        validated_data.pop("captcha_hashkey", None)
+        validated_data.pop("sender", None)
         
+        return super().create(validated_data)
 
     def get_email(self, obj):
         return obj.username.email

@@ -35,6 +35,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/registration/', RegistrationAPIView.as_view(), name='register'),
     path('api/v1/comments-auth/', include('rest_framework.urls')),
+    path('captcha/', include('captcha.urls')),
     path('api/v1/', include(router.urls)),
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
