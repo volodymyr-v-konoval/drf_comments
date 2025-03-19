@@ -11,7 +11,7 @@ class CommentSerializer(CaptchaModelSerializer):
 
     class Meta:
         model = Comment
-        fields = (
+        fields = [
             "id",
             "author",
             "username",
@@ -24,7 +24,8 @@ class CommentSerializer(CaptchaModelSerializer):
             "captcha_code",
             "captcha_hashkey",
             "sender",
-        )
+        ]
+
     
     def create(self, validated_data):
         validated_data.pop("captcha_code", None)
@@ -40,12 +41,16 @@ class CommentSerializer(CaptchaModelSerializer):
         return obj.username.username
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(CaptchaModelSerializer):
+
+    sender = serializers.EmailField(write_only=True, required=False)  
+
     class Meta:
         model = User
-        fields = ['username', 'password', 'email']
+        fields = ["username", "password", "email", 
+                  "captcha_code", "captcha_hashkey", "sender",]
         extra_kwargs = {
-            'password': {'write_only': True},
+            "password": {"write_only": True},
         }
 
     def create(self, validated_data):
