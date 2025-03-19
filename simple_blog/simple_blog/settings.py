@@ -15,6 +15,8 @@ from datetime import timedelta
 import os
 from dotenv import load_dotenv
 
+from blog.captcha_challenge import captcha_castom_challenge
+
 load_dotenv()
 
 
@@ -193,3 +195,5 @@ SIMPLE_JWT = {
 }
 
 CAPTCHA_TEST_MODE = os.getenv('CAPTCHA_TEST_MODE', 'False') == 'True'
+CAPTCHA_CHALLENGE_FUNCT = captcha_castom_challenge()
+
