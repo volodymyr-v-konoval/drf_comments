@@ -5,12 +5,21 @@ from .models import Comment
 
 class CommentSerializer(serializers.ModelSerializer):
     username = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    email = serializers.SerializerMethodField()
+
+    author = serializers.SerializerMethodField()  
 
     class Meta:
         model = Comment
         fields = ('__all__')
+        
 
+    def get_email(self, obj):
+        return obj.username.email
     
+    def get_author(self, obj):
+        return obj.username.username
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
