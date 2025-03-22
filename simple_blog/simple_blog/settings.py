@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "captcha",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -81,6 +82,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "simple_blog.asgi.application"
 WSGI_APPLICATION = "simple_blog.wsgi.application"
 
 
@@ -89,7 +91,7 @@ WSGI_APPLICATION = "simple_blog.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
+        "ENGINE": os.getenv("DATABASE_ENGINE"),
         "USER": os.getenv("DATABASE_USER"),
         "NAME": os.getenv("DATABASE_NAME"),
         "PASSWORD": os.getenv("DATABASE_PASSWORD"),
@@ -202,3 +204,11 @@ SIMPLE_JWT = {
 CAPTCHA_TEST_MODE = os.getenv('CAPTCHA_TEST_MODE', 'False') == 'True'
 CAPTCHA_CHALLENGE_FUNCT = captcha_castom_challenge()
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_URL", "REDIS_PORT")],
+        },
+    },
+}
