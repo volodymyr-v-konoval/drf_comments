@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "captcha",
     "channels",
+    "django_elasticsearch_dsl",
 ]
 
 MIDDLEWARE = [
@@ -212,3 +213,13 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+ELASTICSEARCH_DSL = {
+    "default": {
+        'hosts': 'http://elastic:Fe7TOCD93pJ4WMMpda_9@localhost:9200'
+    }
+}
+
+CELERY_BROKER_URL = "pyamqp://guest@localhost"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
