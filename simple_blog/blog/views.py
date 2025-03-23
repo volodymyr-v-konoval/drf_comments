@@ -1,7 +1,7 @@
+import logging
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.core.cache import cache
-from .models import Comment
 from .serializers import CommentSerializer, UserSerializer
 from elasticsearch import Elasticsearch
 from rest_framework import viewsets, permissions, generics
@@ -10,7 +10,10 @@ from rest_framework.decorators import api_view
 from blog.tasks import (index_comment,
                         update_comment_in_elasticsearch,
                         delete_comment_from_elasticsearch)
+from .models import Comment
 
+
+logger = logging.getLogger("events")
 
 es = Elasticsearch(["http://localhost:9200"],
                    basic_auth=("elastic", "EusuO9toKtg6zBT02yZ5"))
@@ -44,16 +47,21 @@ class CommentViewSet(viewsets.ModelViewSet):
             }
         )
         cache.delete("comments_list")
+        logger.info(f"Comment {comment.id} was created by {comment.username}")
 
     def perform_update(self, serializer):
         comment = serializer.save()
         update_comment_in_elasticsearch.delay(comment.id)
         cache.delete("comments_list")
 
+        logging.info(f"Comment {comment.id} was updated by user {comment.username}")
+        
     def perform_destroy(self, instance):
         delete_comment_from_elasticsearch.delay(instance.id)
         instance.delete()
         cache.delete("comments_list")
+
+        logger.info(f"Comment {instance.id} wsa deleted by {instance.username}")
 
 
 class RegistrationAPIView(generics.CreateAPIView):
