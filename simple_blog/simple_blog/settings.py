@@ -209,7 +209,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.getenv("REDIS_URL", "REDIS_PORT")],
+            "hosts": [os.getenv("REDIS_URL")],
         },
     },
 }
@@ -223,3 +223,10 @@ ELASTICSEARCH_DSL = {
 CELERY_BROKER_URL = "pyamqp://guest@localhost"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+    }
+}
