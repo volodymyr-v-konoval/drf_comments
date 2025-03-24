@@ -17,6 +17,7 @@ from dotenv import load_dotenv
 
 from blog.captcha_challenge import captcha_castom_challenge
 from opensearchpy import OpenSearch
+import dj_database_url
 
 load_dotenv()
 
@@ -92,14 +93,7 @@ WSGI_APPLICATION = "simple_blog.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": os.getenv("DATABASE_ENGINE"),
-        "USER": os.getenv("DATABASE_USER"),
-        "NAME": os.getenv("DATABASE_NAME"),
-        "PASSWORD": os.getenv("DATABASE_PASSWORD"),
-        "HOST": os.getenv("DATABASE_HOST"),
-        "PORT": os.getenv("DATABASE_PORT"),
-    }
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }
 
 # Password validation

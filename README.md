@@ -83,7 +83,7 @@ To start the application, run:
 ```bash
 python3 manage.py runserver
 ```
-The API will be available at `http://127.0.0.1:8000/`
+The API will be available at `http://127.0.0.1:8000/api/v1/`
 
 To rebuild OpenSearch indices, use:
 ```bash
