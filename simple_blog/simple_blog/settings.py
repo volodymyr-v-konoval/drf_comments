@@ -217,8 +217,8 @@ CHANNEL_LAYERS = {
 
 OPENSEARCH_DSL = {
     "default": {
-        "hosts": ["https://dugzwnzkru:mry5huwxct@no-company-search-5870166218.eu-central-1.bonsaisearch.net:443"],
-        "http_auth": ("dugzwnzkru", "mry5huwxct"), 
+        "hosts": [os.getenv("OPENSEARCH_HOSTS")],
+        "http_auth": (os.getenv("OPENSEARCH_USER"), os.getenv("OPENSEARCH_PASSWORD")),
         "timeout": 30,
         "use_ssl": True,
         "verify_certs": False, 
