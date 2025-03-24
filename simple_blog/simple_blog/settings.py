@@ -233,9 +233,12 @@ CACHES = {
 }
 
 
-LOGS_DIR = os.path.join(BASE_DIR, "logs")
-if not os.path.exists(LOGS_DIR):
-    os.makedirs(LOGS_DIR)
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+LOG_FILE = os.path.join(LOG_DIR, "events.log")
+
+os.makedirs(LOG_DIR, exist_ok=True)
+if not os.path.exists(LOG_FILE):
+    open(LOG_FILE, 'a').close()
 
 
 LOGGING = {
