@@ -21,6 +21,7 @@ django-elasticsearch-dsl-drf = "^0.22.5"
 opensearch-py = "^2.8.0"
 opensearch-dsl = "^2.1.0"
 django-opensearch-dsl = "^0.6.2"
+gunicorn = "^23.0.0"
 
 
 [build-system]
