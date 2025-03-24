@@ -236,9 +236,11 @@ CACHES = {
 LOG_DIR = os.path.join(BASE_DIR, "logs")
 LOG_FILE = os.path.join(LOG_DIR, "events.log")
 
-os.makedirs(LOG_DIR, exist_ok=True)
-if not os.path.exists(LOG_FILE):
-    open(LOG_FILE, 'a').close()
+try:
+    os.makedirs(LOG_DIR, exist_ok=True)
+    Path(LOG_FILE).touch(exist_ok=True)
+except Exception:
+    LOG_FILE = None
 
 
 LOGGING = {
@@ -254,7 +256,7 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "logs/events.log",
+            "filename": LOG_FILE or "/dev/null",
             "formatter": "verbose",
         },
     },
@@ -264,7 +266,7 @@ LOGGING = {
             "level": "INFO",
             "propagate": True,
         },
-        "events": {  # Логер для подій
+        "events": {  
             "handlers": ["file"],
             "level": "INFO",
             "propagate": False,
