@@ -16,6 +16,7 @@ import os
 from dotenv import load_dotenv
 
 from blog.captcha_challenge import captcha_castom_challenge
+from opensearchpy import OpenSearch
 
 load_dotenv()
 
@@ -50,7 +51,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "captcha",
     "channels",
-    "django_elasticsearch_dsl",
+    "django_opensearch_dsl",
 ]
 
 MIDDLEWARE = [
@@ -214,20 +215,25 @@ CHANNEL_LAYERS = {
     },
 }
 
-ELASTICSEARCH_DSL = {
+OPENSEARCH_DSL = {
     "default": {
-        'hosts': 'http://elastic:Fe7TOCD93pJ4WMMpda_9@localhost:9200'
+        "hosts": ["https://dugzwnzkru:mry5huwxct@no-company-search-5870166218.eu-central-1.bonsaisearch.net:443"],
+        "http_auth": ("dugzwnzkru", "mry5huwxct"), 
+        "timeout": 30,
+        "use_ssl": True,
+        "verify_certs": False, 
+        "headers": {"User-Agent": "opensearch-py"}
     }
 }
 
-CELERY_BROKER_URL = "pyamqp://guest@localhost"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": os.getenv("REDIS_URL"),
     }
 }
 
