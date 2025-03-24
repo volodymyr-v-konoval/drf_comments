@@ -16,6 +16,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
+from django.http import HttpResponse
 from django.urls import path, include
 
 from blog.views import CommentViewSet, RegistrationAPIView
@@ -34,6 +35,7 @@ router.register(r'comments', CommentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', lambda request: HttpResponse("Welcome to the API. Try /api/v1/")),
     path('api/v1/registration/', RegistrationAPIView.as_view(), name='register'),
     path('api/v1/comments-auth/', include('rest_framework.urls')),
     path('captcha/', include('captcha.urls')),
