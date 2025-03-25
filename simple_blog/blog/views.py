@@ -1,8 +1,8 @@
 import logging
+import os
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.core.cache import cache
-from .serializers import CommentSerializer, UserSerializer
 from elasticsearch import Elasticsearch
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
@@ -10,13 +10,25 @@ from rest_framework.decorators import api_view
 from blog.tasks import (index_comment,
                         update_comment_in_elasticsearch,
                         delete_comment_from_elasticsearch)
+from .serializers import CommentSerializer, UserSerializer
 from .models import Comment
 
 
 logger = logging.getLogger("events")
 
-es = Elasticsearch(["http://localhost:9200"],
-                   basic_auth=("elastic", "EusuO9toKtg6zBT02yZ5"))
+
+es = Elasticsearch(
+    [os.getenv("OPENSEARCH_HOSTS")],
+    basic_auth=(
+        os.getenv("OPENSEARCH_USER"),
+        os.getenv("OPENSEARCH_PASSWORD")
+    ),
+    headers={"User-Agent": "opensearch-py"},
+    request_timeout=30,
+    use_ssl=True,
+    verify_certs=False
+)
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all().order_by('-created')
