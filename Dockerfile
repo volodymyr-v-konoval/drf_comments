@@ -16,4 +16,5 @@ RUN ln -s $(poetry env info --path)/bin/gunicorn /usr/local/bin/gunicorn
 
 # Додаємо Python-шлях для Django
 ENV PYTHONPATH=/app/simple_blog
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "simple_blog.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "simple_blog.wsgi:application"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "simple_blog.asgi:application"]
