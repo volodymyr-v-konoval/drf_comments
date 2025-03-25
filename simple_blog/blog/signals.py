@@ -9,5 +9,5 @@ def update_comment_in_index(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Comment)
 def delete_comment_from_index(sender, instance, **kwargs):
-    CommentDocument().delete(instance, ignore=404)  
+    CommentDocument().update(instance, action='delete', refresh=True)
     
