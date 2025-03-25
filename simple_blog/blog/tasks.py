@@ -1,10 +1,11 @@
 import os
 from celery import shared_task
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import NotFoundError
 from .models import Comment
 
 
-es = Elasticsearch(
+es_client = Elasticsearch(
     [os.getenv("OPENSEARCH_HOSTS")],
     basic_auth=(
         os.getenv("OPENSEARCH_USER"),
@@ -24,7 +25,7 @@ def index_comment(comment_id):
         comment = Comment.objects.get(id=comment_id)
         username = comment.username.username
         created = comment.created.isoformat()
-        es.index(index="comments", id=comment.id, body={
+        es_client.index(index="comments", id=comment.id, body={
             "username": username,
             "text": comment.text,
             "created": created
@@ -41,7 +42,7 @@ def update_comment_in_elasticsearch(comment_id):
         username = comment.username.username
         created = comment.created.isoformat()
 
-        es.index(index="comments", 
+        es_client.index(index="comments", 
                 id=comment.id, 
                 body={
                     "username": username, 
@@ -53,5 +54,11 @@ def update_comment_in_elasticsearch(comment_id):
     
 @shared_task
 def delete_comment_from_elasticsearch(comment_id):
-    es.delete(index="comments", id=comment_id)
-    print(f"Comment {comment_id} was deleted from Elasticsearch")
+    try:
+        es_client.delete(index="comments", id=comment_id)
+        print(f"Comment {comment_id} was deleted from Elasticsearch")
+    except NotFoundError:
+        print(f"Comment {comment_id} not found in Elasticsearch – nothing to delete.")
+    except Exception as e:
+        print(f"Error deleting comment from Elasticsearch: {e}")
+            
