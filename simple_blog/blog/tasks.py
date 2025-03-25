@@ -1,10 +1,19 @@
+import os
 from celery import shared_task
 from elasticsearch import Elasticsearch
 from .models import Comment
 
 
-es = Elasticsearch(["http://localhost:9200"],
-                   basic_auth=("elastic", "EusuO9toKtg6zBT02yZ5"))
+es = Elasticsearch(
+    [os.getenv("OPENSEARCH_HOSTS")],
+    basic_auth=(
+        os.getenv("OPENSEARCH_USER"),
+        os.getenv("OPENSEARCH_PASSWORD")
+    ),
+    headers={"User-Agent": "opensearch-py"},
+    request_timeout=30,
+    verify_certs=False
+)
 
 
 
