@@ -69,7 +69,15 @@ class CommentViewSet(viewsets.ModelViewSet):
         
     def perform_destroy(self, instance):
         print(f"[DEBUG] Deleting object: {instance} of type {type(instance)}")  
-        delete_comment_from_elasticsearch.delay(instance.id)
+        
+        
+        try:
+            delete_comment_from_elasticsearch.delay(instance.id)
+        except Exception as e:
+            print(f"[ERROR] Failed to queue Celery task: {e}", flush=True)
+        
+        
+        
         instance.delete()
         cache.delete("comments_list")
 
