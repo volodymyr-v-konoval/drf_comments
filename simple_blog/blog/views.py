@@ -25,7 +25,6 @@ es = Elasticsearch(
     ),
     headers={"User-Agent": "opensearch-py"},
     request_timeout=30,
-    use_ssl=True,
     verify_certs=False
 )
 
