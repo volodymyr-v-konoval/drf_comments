@@ -68,6 +68,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         logging.info(f"Comment {comment.id} was updated by user {comment.username}")
         
     def perform_destroy(self, instance):
+        print(f"[DEBUG] Deleting object: {instance} of type {type(instance)}")  
         delete_comment_from_elasticsearch.delay(instance.id)
         instance.delete()
         cache.delete("comments_list")
