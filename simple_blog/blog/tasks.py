@@ -53,5 +53,5 @@ def update_comment_in_elasticsearch(comment_id):
     
 @shared_task
 def delete_comment_from_elasticsearch(comment_id):
-    es.delete(id=comment_id)
+    es.delete(index="comments", id=comment_id)
     print(f"Comment {comment_id} was deleted from Elasticsearch")

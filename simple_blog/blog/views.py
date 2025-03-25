@@ -67,41 +67,12 @@ class CommentViewSet(viewsets.ModelViewSet):
 
         logging.info(f"Comment {comment.id} was updated by user {comment.username}")
         
-    # def perform_destroy(self, instance):
-    #     print(f"[DEBUG] Deleting object: {instance} of type {type(instance)}")  
-        
-        
-    #     try:
-    #         delete_comment_from_elasticsearch.delay(instance.id)
-    #     except Exception as e:
-    #         print(f"[ERROR] Failed to queue Celery task: {e}", flush=True)
-        
-        
-        
-    #     instance.delete()
-    #     cache.delete("comments_list")
-
-    #     logger.info(f"Comment {instance.id} wsa deleted by {instance.username}")
-
     def perform_destroy(self, instance):
-        print(f"[DEBUG] Deleting object: {instance} of type {type(instance)}", flush=True)
-        try:
-            delete_comment_from_elasticsearch.delay(instance.id)
-        except Exception as e:
-            print(f"[ERROR] Failed to queue Celery task: {e}", flush=True)
-
-        try:
-            instance.delete()
-            print(f"[DEBUG] Successfully deleted instance {instance.id}", flush=True)
-        except Exception as e:
-            print(f"[ERROR] Failed to delete instance: {e}", flush=True)
-
+        instance.delete()
+        delete_comment_from_elasticsearch.delay(instance.id)
         cache.delete("comments_list")
 
-        try:
-            logger.info(f"Comment {instance.id} was deleted by {instance.username}")
-        except Exception as e:
-            print(f"[ERROR] Failed to log deletion: {e}", flush=True)
+        logger.info(f"Comment {instance.id} wsa deleted by {instance.username}")
 
 
 class RegistrationAPIView(generics.CreateAPIView):
